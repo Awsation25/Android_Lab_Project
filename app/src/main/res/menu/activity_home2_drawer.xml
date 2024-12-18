@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/img_6"
+            android:title="@string/menu_home" />
+        <item
+            android:id="@+id/nav_newTask"
+            android:icon="@drawable/img_5"
+            android:title="New Task" />
+        <item
+            android:id="@+id/nav_allTasks"
+            android:icon="@drawable/img_4"
+            android:title="All Tasks" />
+        <item
+            android:id="@+id/nav_completedTasks"
+            android:icon="@drawable/img_3"
+            android:title="Completed Tasks" />
+        <item
+            android:id="@+id/nav_search"
+            android:icon="@drawable/img_2"
+            android:title="Search" />
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/img"
+            android:title="Profile" />
+        <item
+            android:id="@+id/nav_logOut"
+            android:icon="@drawable/img_1"
+            android:title="Log Out" />
+    </group>
+</menu>

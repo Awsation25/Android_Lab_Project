@@ -9,14 +9,15 @@ public class Task {
     private String dueDate;
     private PriorityLevel priorityLevel;
     private CompletionStatus completionStatus;
-
-    public Task(String email, String tittle, String description, String dueDate, PriorityLevel priorityLevel, CompletionStatus completionStatus) {
+    private Boolean reminder;
+    public Task(String email, String tittle, String description, String dueDate, PriorityLevel priorityLevel, CompletionStatus completionStatus,Boolean reminder) {
         this.email = email;
         this.tittle = tittle;
         this.description = description;
         this.dueDate = dueDate;
         this.priorityLevel = priorityLevel;
         this.completionStatus = completionStatus;
+        this.reminder=reminder;
     }
 
     public Task() {
@@ -68,5 +69,13 @@ public class Task {
 
     public void setCompletionStatus(CompletionStatus completionStatus) {
         this.completionStatus = completionStatus;
+    }
+
+    public Boolean getReminder() {
+        return reminder;
+    }
+
+    public void setReminder(Boolean reminder) {
+        this.reminder = reminder;
     }
 }

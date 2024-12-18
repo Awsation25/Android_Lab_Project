@@ -6,4 +6,13 @@
     </style>
 
     <style name="Theme.AwsShaheen_GhassanQandeel_ENCS5150_Project" parent="Base.Theme.AwsShaheen_GhassanQandeel_ENCS5150_Project" />
+
+    <style name="Theme.AwsShaheen_GhassanQandeel_ENCS5150_Project.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.AwsShaheen_GhassanQandeel_ENCS5150_Project.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.AwsShaheen_GhassanQandeel_ENCS5150_Project.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
