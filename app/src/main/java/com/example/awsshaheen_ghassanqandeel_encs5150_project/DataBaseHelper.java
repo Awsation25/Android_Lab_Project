@@ -9,6 +9,9 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DataBaseHelper extends SQLiteOpenHelper {
 
     private Context context;
@@ -45,7 +48,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     "DESCRIPTION TEXT," +
                     "DUEDATE DATETIME ," +
                     "COMPLETION_STATE  TEXT," +
-                    "PRIORITY_LEVEL  TEXT)");
+                    "PRIORITY_LEVEL  TEXT,"+
+                    "Reminder Boolean)");
 
 
         } catch (Exception e) {
@@ -79,7 +83,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         contentValues.put("DUEDATE", task.getDueDate());
         contentValues.put("COMPLETION_STATE", task.getCompletionStatus().toString());
         contentValues.put("PRIORITY_LEVEL", task.getPriorityLevel().toString());
-
+        contentValues.put("Reminder", task.getReminder());
         sqLiteDatabase.insert("TASKS", null, contentValues);
     }
 
@@ -119,5 +123,69 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         return foundPassword; // Will return null if the email is not found
     }
+    public String getAllTasks() {
+        SQLiteDatabase db = getReadableDatabase();
+        StringBuilder taskList = new StringBuilder();
+        Cursor cursor = db.rawQuery("SELECT ID, TITTLE, DESCRIPTION, DUEDATE, COMPLETION_STATE, PRIORITY_LEVEL, Reminder FROM TASKS", null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                int id = cursor.getInt(0);
+                String title = cursor.getString(1);
+                String description = cursor.getString(2);
+                String dueDate = cursor.getString(3);
+                String completionState = cursor.getString(4);
+                String priorityLevel = cursor.getString(5);
+                int reminder = cursor.getInt(6);
+                taskList.append("Task").append(id)
+                        .append("\n")
+                        .append("Title: ").append(title)
+                        .append("\n")
+                        .append(", Description: ").append(description)
+                        .append("\n")
+                        .append(", Due Date: ").append(dueDate)
+                        .append("\n")
+                        .append(", Completion State: ").append(completionState)
+                        .append("\n")
+                        .append(", Priority: ").append(priorityLevel)
+                        .append("\n")
+                        .append(", Reminder: ").append(reminder == 1 ? "Yes" : "No")
+                        .append("\n")
+                        .append("-----------------------------------------------------")
+                        .append("\n");
+            }
+            cursor.close();
+        }
+
+        return taskList.toString();
+    }
+    public String getAllTasksSorted() {
+        SQLiteDatabase db = getReadableDatabase();
+        StringBuilder taskList = new StringBuilder();
+
+
+        Cursor cursor = db.rawQuery("SELECT ID,TITTLE, DESCRIPTION, DUEDATE FROM TASKS ORDER BY DUEDATE ASC", null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                int id =cursor.getInt(0);
+                String title = cursor.getString(1);
+                String description = cursor.getString(2);
+                String dueDate = cursor.getString(3);
+                taskList.append("Task").append(id)
+                        .append("\n")
+                        .append("Title: ").append(title)
+                        .append("\n")
+                        .append(", Description: ").append(description)
+                        .append("\n")
+                        .append(", Due Date: ").append(dueDate)
+                        .append("-----------------------------------------------------")
+                        .append("\n");
+            }
+            cursor.close();
+        }
+
+        return taskList.toString();
+    }
+
+
 
 }

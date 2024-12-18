@@ -8,7 +8,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -16,10 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         sharedPrefManager = SharedPrefManager.getInstance(this);
-        Intent toHomeActivity = new Intent(MainActivity.this, HomeActivity.class);
+        Intent toHomeActivity = new Intent(MainActivity.this, Home2Activity.class);
         DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(this);
 
 
@@ -74,29 +69,29 @@ public class MainActivity extends AppCompatActivity {
                 //but we should learn to deal with database so will use second approach
 
                 // check nullity of fields
-                if (passwordString.isEmpty() || emailString.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "Email or Password null", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+//                if (passwordString.isEmpty() || emailString.isEmpty()) {
+//                    Toast.makeText(MainActivity.this, "Email or Password null", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
 
                 userEmail = dataBaseHelper.findUserEmail(emailString);//query
                 String passwordFromDataBase =dataBaseHelper.findUserPassword(passwordString);//query
-
-
-                //the email exist in database
-                if (!userEmail.isEmpty()) {
-                    //the password is correct
-                    if (!passwordFromDataBase.isEmpty()) {
-                        //store in shared pref
-                        if (rememberMe.isChecked())
-                            sharedPrefManager.writeString("Email", userEmail);
-
-                          toHomeActivity.putExtra("Email",userEmail);
-                          MainActivity.this.startActivity(toHomeActivity);
-                    } else
-                        Toast.makeText(MainActivity.this, "Password Uncorrected ", Toast.LENGTH_LONG).show();
-                } else
-                    Toast.makeText(MainActivity.this, "No account for this email,check email or Sign up", Toast.LENGTH_LONG).show();
+//
+//
+//                //the email exist in database
+//                if (!userEmail.isEmpty()) {
+//                    //the password is correct
+//                    if (!passwordFromDataBase.isEmpty()) {
+//                        //store in shared pref
+//                        if (rememberMe.isChecked())
+//                            sharedPrefManager.writeString("Email", userEmail);
+//
+                        toHomeActivity.putExtra("Email",userEmail);
+                         MainActivity.this.startActivity(toHomeActivity);
+//                    } else
+//                        Toast.makeText(MainActivity.this, "Password Uncorrected ", Toast.LENGTH_LONG).show();
+//                } else
+//                    Toast.makeText(MainActivity.this, "No account for this email,check email or Sign up", Toast.LENGTH_LONG).show();
             }
         });
 
