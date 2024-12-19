@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.Menu;
 import android.widget.TextView;
 
+import com.example.awsshaheen_ghassanqandeel_encs5150_project.ui.NewTask.newTaskFragment;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
@@ -27,6 +28,8 @@ public class Home2Activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
+        String userEmail=intent.getStringExtra("Email");
 
         binding = ActivityHome2Binding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());

@@ -21,7 +21,7 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        Intent toHomeActivity = new Intent(SignUpActivity.this, Home2Activity.class);
+        Intent toMainActivity = new Intent(SignUpActivity.this, MainActivity.class);
         DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(this);
 
         LinearLayout parentLinearLayout = new LinearLayout(this);
@@ -193,15 +193,15 @@ public class SignUpActivity extends AppCompatActivity {
                 else
                     confirmPasswordValidity = true;
 
-                if(emailValidity
-                && emailExist
-                && firstnameValidity
-                && lastnameValidity
-                && passwordRightLength
-                && passwordLowerCase
-                && passwordUpperCase
-                && passwordExistNumber
-                && confirmPasswordValidity){
+                if (emailValidity
+                        && emailExist
+                        && firstnameValidity
+                        && lastnameValidity
+                        && passwordRightLength
+                        && passwordLowerCase
+                        && passwordUpperCase
+                        && passwordExistNumber
+                        && confirmPasswordValidity) {
                     //Write on database and go to home page
                     User newUser = new User();
                     newUser.setEmail(email);
@@ -210,14 +210,23 @@ public class SignUpActivity extends AppCompatActivity {
                     newUser.setPassword(password);
                     dataBaseHelper.insertUser(newUser);
 
-                    SignUpActivity.this.startActivity(toHomeActivity);
+                    SignUpActivity.this.startActivity(toMainActivity);
 
                 }
 
             }
         });
 
-// Set the parent layout as the content view
+        Button returnToLogInButton = new Button(this);
+        returnToLogInButton.setText(" Return To Sign In");
+        returnToLogInButton.setTextSize(28);
+        returnToLogInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SignUpActivity.this.startActivity(toMainActivity);
+            }
+        });
+        parentLayout.addView(returnToLogInButton);
         setContentView(parentLayout);
 
 

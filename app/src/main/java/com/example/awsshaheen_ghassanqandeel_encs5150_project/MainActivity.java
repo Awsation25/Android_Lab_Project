@@ -17,9 +17,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
-//ghassaaaaaaaaaaaaaaaaaaaaaaaan
+
     private String userEmail;
     private SharedPrefManager sharedPrefManager;
+    private EmailSharedPrefManager sharedEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         sharedPrefManager = SharedPrefManager.getInstance(this);
+        sharedEmail =EmailSharedPrefManager.getInstance(this);
         Intent toHomeActivity = new Intent(MainActivity.this, Home2Activity.class);
         DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(this);
 
@@ -63,35 +65,41 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String passwordString = password.getText().toString();
                 String emailString = email.getText().toString();
+
+
                 //  There two way to check valid of our email and password
                 //1- return all emails and passwords from database -> is easier
                 //2- or take our input email and password and check it in data base -> is heavy go to database many times
                 //but we should learn to deal with database so will use second approach
 
                 // check nullity of fields
-//                if (passwordString.isEmpty() || emailString.isEmpty()) {
-//                    Toast.makeText(MainActivity.this, "Email or Password null", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
+                if (passwordString.isEmpty() || emailString.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "Email or Password null", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 userEmail = dataBaseHelper.findUserEmail(emailString);//query
                 String passwordFromDataBase =dataBaseHelper.findUserPassword(passwordString);//query
-//
-//
-//                //the email exist in database
-//                if (!userEmail.isEmpty()) {
-//                    //the password is correct
-//                    if (!passwordFromDataBase.isEmpty()) {
-//                        //store in shared pref
-//                        if (rememberMe.isChecked())
-//                            sharedPrefManager.writeString("Email", userEmail);
-//
+
+
+                //the email exist in database
+                if (!userEmail.isEmpty()) {
+                    //the password is correct
+
+                    if (!passwordFromDataBase.isEmpty()) {
+                        //store in shared pref
+                        if (rememberMe.isChecked())
+                            sharedPrefManager.writeString("Email", userEmail);
+
+                        sharedEmail.writeString("Email",userEmail);
+
+
                         toHomeActivity.putExtra("Email",userEmail);
                          MainActivity.this.startActivity(toHomeActivity);
-//                    } else
-//                        Toast.makeText(MainActivity.this, "Password Uncorrected ", Toast.LENGTH_LONG).show();
-//                } else
-//                    Toast.makeText(MainActivity.this, "No account for this email,check email or Sign up", Toast.LENGTH_LONG).show();
+                    } else
+                        Toast.makeText(MainActivity.this, "Password Uncorrected ", Toast.LENGTH_LONG).show();
+                } else
+                    Toast.makeText(MainActivity.this, "No account for this email,check email or Sign up", Toast.LENGTH_LONG).show();
             }
         });
 

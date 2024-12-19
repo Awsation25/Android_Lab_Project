@@ -4,14 +4,16 @@ import java.sql.Timestamp;
 
 public class Task {
     private int id;
+    private String email;
     private String tittle;
     private String description;
     private String dueDate;
     private PriorityLevel priorityLevel;
     private CompletionStatus completionStatus;
     private Boolean reminder;
-    public Task(int id, String tittle, String description, String dueDate, PriorityLevel priorityLevel, CompletionStatus completionStatus,Boolean reminder) {
+    public Task(int id, String tittle,String email ,String description, String dueDate, PriorityLevel priorityLevel, CompletionStatus completionStatus,Boolean reminder) {
         this.id = id;
+        this.email=email;
         this.tittle = tittle;
         this.description = description;
         this.dueDate = dueDate;
@@ -29,6 +31,14 @@ public class Task {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getTittle() {

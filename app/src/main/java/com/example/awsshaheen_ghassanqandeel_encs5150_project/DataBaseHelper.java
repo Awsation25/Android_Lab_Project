@@ -1,5 +1,8 @@
 package com.example.awsshaheen_ghassanqandeel_encs5150_project;
 
+import static java.security.AccessController.getContext;
+
+import android.app.Application;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -17,6 +20,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     private Context context;
 
+    private EmailSharedPrefManager sharedEmail = EmailSharedPrefManager.getInstance(context);
+    private String userEmail = sharedEmail.readString("Email", null);
     private static DataBaseHelper instance;
 
     private DataBaseHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
@@ -49,7 +54,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     "DESCRIPTION TEXT," +
                     "DUEDATE DATETIME ," +
                     "COMPLETION_STATE  TEXT," +
-                    "PRIORITY_LEVEL  TEXT,"+
+                    "PRIORITY_LEVEL  TEXT," +
                     "Reminder Boolean)");
 
 
@@ -80,6 +85,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 
         contentValues.put("TITTLE", task.getTittle());
+        contentValues.put("EMAIL", task.getEmail());
         contentValues.put("DESCRIPTION", task.getDescription());
         contentValues.put("DUEDATE", task.getDueDate());
         contentValues.put("COMPLETION_STATE", task.getCompletionStatus().toString());
@@ -106,6 +112,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         return foundEmail; // Will return null if the email is not found
     }
+
     public String findUserPassword(String password) {
         SQLiteDatabase db = getReadableDatabase();
         String foundPassword = null;
@@ -126,10 +133,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     public List<Task> getAllTasks() {
+
         SQLiteDatabase db = getReadableDatabase();
         List<Task> tasks = new ArrayList<>();
 
-        Cursor cursor = db.rawQuery("SELECT Email, TITTLE, DESCRIPTION, DUEDATE, COMPLETION_STATE, PRIORITY_LEVEL, Reminder FROM TASKS", null);
+        Cursor cursor = db.rawQuery(
+                "SELECT EMAIL, TITTLE, DESCRIPTION, DUEDATE, COMPLETION_STATE, PRIORITY_LEVEL, Reminder " +
+                        "FROM TASKS WHERE EMAIL LIKE ?",
+                new String[]{userEmail}
+
+        );
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 int id = cursor.getInt(0);
@@ -139,7 +152,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 CompletionStatus completionState = CompletionStatus.valueOf(cursor.getString(4));
                 PriorityLevel priorityLevel = PriorityLevel.valueOf(cursor.getString(5));
                 boolean reminder = cursor.getInt(6) == 1;
-                Task task = new Task(id, title, description, dueDate,priorityLevel,completionState, reminder);
+                Task task = new Task(id, " ", title, description, dueDate, priorityLevel, completionState, reminder);
                 tasks.add(task);
             }
             cursor.close();
@@ -153,10 +166,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         StringBuilder taskList = new StringBuilder();
 
 
-        Cursor cursor = db.rawQuery("SELECT ID,TITTLE, DESCRIPTION, DUEDATE FROM TASKS ORDER BY DUEDATE ASC", null);
+        Cursor cursor = db.rawQuery(
+                "SELECT ID, TITTLE, DESCRIPTION, DUEDATE FROM TASKS WHERE EMAIL = ? ORDER BY DUEDATE ASC",
+                new String[]{userEmail}
+        );
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                int id =cursor.getInt(0);
+                int id = cursor.getInt(0);
                 String title = cursor.getString(1);
                 String description = cursor.getString(2);
                 String dueDate = cursor.getString(3);
@@ -175,6 +191,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         return taskList.toString();
     }
+
     public boolean deleteTaskById(int id) {
         boolean isDeleted = false;
 
@@ -195,8 +212,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         return isDeleted; // Returns true if the task was deleted, false otherwise
     }
-
-
 
 
 }
