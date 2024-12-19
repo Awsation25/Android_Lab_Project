@@ -21,7 +21,7 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        Intent toHomeActivity = new Intent(SignUpActivity.this, HomeActivity.class);
+        Intent toHomeActivity = new Intent(SignUpActivity.this, Home2Activity.class);
         DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(this);
 
         LinearLayout parentLinearLayout = new LinearLayout(this);
