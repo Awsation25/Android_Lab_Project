@@ -3,15 +3,15 @@ package com.example.awsshaheen_ghassanqandeel_encs5150_project;
 import java.sql.Timestamp;
 
 public class Task {
-    private String email;
+    private int id;
     private String tittle;
     private String description;
     private String dueDate;
     private PriorityLevel priorityLevel;
     private CompletionStatus completionStatus;
     private Boolean reminder;
-    public Task(String email, String tittle, String description, String dueDate, PriorityLevel priorityLevel, CompletionStatus completionStatus,Boolean reminder) {
-        this.email = email;
+    public Task(int id, String tittle, String description, String dueDate, PriorityLevel priorityLevel, CompletionStatus completionStatus,Boolean reminder) {
+        this.id = id;
         this.tittle = tittle;
         this.description = description;
         this.dueDate = dueDate;
@@ -23,12 +23,12 @@ public class Task {
     public Task() {
     }
 
-    public String getEmail() {
-        return email;
+    public int getId() {
+        return id;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTittle() {
@@ -77,5 +77,15 @@ public class Task {
 
     public void setReminder(Boolean reminder) {
         this.reminder = reminder;
+    }
+
+    @Override
+    public String toString() {
+        return "tittle:" + tittle + '\n' +
+                "description:" + description + '\n' +
+                "completionStatus:" + completionStatus + '\n' +
+                "dueDate:" + dueDate + '\n' +
+                "priorityLevel:" + priorityLevel+ '\n' +
+                "reminder:" + reminder;
     }
 }

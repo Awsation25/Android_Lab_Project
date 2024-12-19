@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -77,7 +78,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put("EMAIL", task.getEmail());
+
         contentValues.put("TITTLE", task.getTittle());
         contentValues.put("DESCRIPTION", task.getDescription());
         contentValues.put("DUEDATE", task.getDueDate());
@@ -123,41 +124,30 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         return foundPassword; // Will return null if the email is not found
     }
-    public String getAllTasks() {
+
+    public List<Task> getAllTasks() {
         SQLiteDatabase db = getReadableDatabase();
-        StringBuilder taskList = new StringBuilder();
-        Cursor cursor = db.rawQuery("SELECT ID, TITTLE, DESCRIPTION, DUEDATE, COMPLETION_STATE, PRIORITY_LEVEL, Reminder FROM TASKS", null);
+        List<Task> tasks = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery("SELECT Email, TITTLE, DESCRIPTION, DUEDATE, COMPLETION_STATE, PRIORITY_LEVEL, Reminder FROM TASKS", null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 int id = cursor.getInt(0);
                 String title = cursor.getString(1);
                 String description = cursor.getString(2);
                 String dueDate = cursor.getString(3);
-                String completionState = cursor.getString(4);
-                String priorityLevel = cursor.getString(5);
-                int reminder = cursor.getInt(6);
-                taskList.append("Task").append(id)
-                        .append("\n")
-                        .append("Title: ").append(title)
-                        .append("\n")
-                        .append(", Description: ").append(description)
-                        .append("\n")
-                        .append(", Due Date: ").append(dueDate)
-                        .append("\n")
-                        .append(", Completion State: ").append(completionState)
-                        .append("\n")
-                        .append(", Priority: ").append(priorityLevel)
-                        .append("\n")
-                        .append(", Reminder: ").append(reminder == 1 ? "Yes" : "No")
-                        .append("\n")
-                        .append("-----------------------------------------------------")
-                        .append("\n");
+                CompletionStatus completionState = CompletionStatus.valueOf(cursor.getString(4));
+                PriorityLevel priorityLevel = PriorityLevel.valueOf(cursor.getString(5));
+                boolean reminder = cursor.getInt(6) == 1;
+                Task task = new Task(id, title, description, dueDate,priorityLevel,completionState, reminder);
+                tasks.add(task);
             }
             cursor.close();
         }
 
-        return taskList.toString();
+        return tasks;
     }
+
     public String getAllTasksSorted() {
         SQLiteDatabase db = getReadableDatabase();
         StringBuilder taskList = new StringBuilder();
@@ -185,6 +175,27 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         return taskList.toString();
     }
+    public boolean deleteTaskById(int id) {
+        boolean isDeleted = false;
+
+        // Get writable database
+        SQLiteDatabase db = getWritableDatabase();
+
+        try {
+            // Execute the delete query
+            int rowsDeleted = db.delete("TASKS", "ID = ?", new String[]{String.valueOf(id)});
+
+            // Check if any rows were deleted
+            if (rowsDeleted > 0) {
+                isDeleted = true;
+            }
+        } catch (Exception e) {
+            Log.e("DatabaseError", "Error while deleting task: " + e.getMessage());
+        }
+
+        return isDeleted; // Returns true if the task was deleted, false otherwise
+    }
+
 
 
 
