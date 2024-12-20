@@ -299,6 +299,36 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public List<Task> findTaskByKeyWord(String keyWord){
+        SQLiteDatabase db = getReadableDatabase();
+        List<Task> tasks = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT EMAIL, DATE(DUEDATE) AS DueDate, " +
+                        "ID, TITTLE, DESCRIPTION, COMPLETION_STATE, PRIORITY_LEVEL, Reminder " +
+                        "FROM TASKS WHERE EMAIL = ? AND (TITTLE LIKE ? OR DESCRIPTION LIKE ?) " ,
+                new String[]{ userEmail, "%" + keyWord + "%", "%" + keyWord + "%"}
+        );
+
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                int id = cursor.getInt(0);
+                String email = cursor.getString(1);
+                String title = cursor.getString(2);
+                String description = cursor.getString(3);
+                String dueDate = cursor.getString(4);
+                CompletionStatus completionStatus = CompletionStatus.valueOf(cursor.getString(5));
+                PriorityLevel priorityLevel = PriorityLevel.valueOf(cursor.getString(6));
+                boolean reminder = cursor.getInt(7) == 1;
+
+                Task task = new Task(id, title, email, description, dueDate, priorityLevel, completionStatus, reminder);
+                tasks.add(task);
+            }
+            cursor.close();
+        }
+        return tasks;
+    }
+
 
 
 }
