@@ -1,8 +1,5 @@
 package com.example.awsshaheen_ghassanqandeel_encs5150_project;
 
-import static java.security.AccessController.getContext;
-
-import android.app.Application;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -225,11 +222,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                int id = cursor.getInt(0);
-                String email = cursor.getString(1);
-                String title = cursor.getString(2);
+                int id = cursor.getInt(2);
+                String title = cursor.getString(4);
+                String email = cursor.getString(0);
                 String description = cursor.getString(3);
-                String dueDate = cursor.getString(4);
+                String dueDate = cursor.getString(1);
                 CompletionStatus completionStatus = CompletionStatus.valueOf(cursor.getString(5));
                 PriorityLevel priorityLevel = PriorityLevel.valueOf(cursor.getString(6));
                 boolean reminder = cursor.getInt(7) == 1;

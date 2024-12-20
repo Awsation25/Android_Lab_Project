@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.awsshaheen_ghassanqandeel_encs5150_project.ui.NewTask.newTaskFragment;
@@ -40,7 +41,7 @@ public class Home2Activity extends AppCompatActivity {
         binding.appBarMain2.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+
             }
         });
         DrawerLayout drawer = binding.drawerLayout;
@@ -89,10 +90,9 @@ public class Home2Activity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home2, menu);
-        TextView headerTextView=findViewById(R.id.headerTextView);
-        Intent intent = new Intent();
-        String userEmail=intent.getStringExtra("Email");
-        headerTextView.setText(userEmail);
+
+
+
 
         return true;
     }
