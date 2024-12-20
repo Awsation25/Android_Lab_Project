@@ -1,7 +1,5 @@
 package com.example.awsshaheen_ghassanqandeel_encs5150_project.ui.home;
 
-import static androidx.core.content.ContextCompat.getSystemService;
-
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
@@ -19,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,10 +29,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.awsshaheen_ghassanqandeel_encs5150_project.CompletionStatus;
-import com.example.awsshaheen_ghassanqandeel_encs5150_project.ConnectionAsyncTask;
 import com.example.awsshaheen_ghassanqandeel_encs5150_project.DataBaseHelper;
-import com.example.awsshaheen_ghassanqandeel_encs5150_project.Home2Activity;
-import com.example.awsshaheen_ghassanqandeel_encs5150_project.MainActivity;
 import com.example.awsshaheen_ghassanqandeel_encs5150_project.PriorityLevel;
 import com.example.awsshaheen_ghassanqandeel_encs5150_project.R;
 import com.example.awsshaheen_ghassanqandeel_encs5150_project.Task;
@@ -46,13 +42,11 @@ public class HomeFragment extends Fragment {
     Button newBtn;
     private FragmentHomeBinding binding;
     private List<Task> tasks;
-    private List<Task> filteredTasks;
+    private List<String> filteredTasks;
     TextView taskText;
     String selectedStatus;
-    boolean filterButtonClicked = false;
+    boolean filterButtonClicked=false;
     String textToFind;
-
-
     // Constants for Notification
     private static final String MY_CHANNEL_ID = "task_notifications";
     private static final String MY_CHANNEL_NAME = "Task Notifications";
@@ -82,15 +76,6 @@ public class HomeFragment extends Fragment {
         notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
     }
 
-    // Example usage: Add a button or method to trigger the notification
-    private void showTaskNotification(Task task) {
-        String title = "Task Reminder: " + task.getTittle();
-        String body = "Don't forget to complete this task:\n\n" +
-                "Title: " + task.getTittle() + "\n" +
-                "Due Date: " + task.getDueDate();
-        createNotification(title, body);
-    }
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel =
@@ -98,20 +83,11 @@ public class HomeFragment extends Fragment {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        EditText filterText = binding.filterText;
+
         DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(getContext());
 
-        Button importTasks = binding.ApiButton;
-        importTasks.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ConnectionAsyncTask connectionAsyncTask = new ConnectionAsyncTask(getContext());
-                connectionAsyncTask.execute("https://mocki.io/v1/d0c1c5e6-78cb-493e-8262-b44047c5288f");
-            }
-        });
-
         // Display tasks in the TextView
-        LinearLayout layout = binding.vLayout;
+        LinearLayout layout=binding.vLayout ;
         List<Button> buttonList = new ArrayList<>();
         List<Button> filteredButtonList = new ArrayList<>();
         LinearLayout popupView = new LinearLayout(getContext());
@@ -132,10 +108,10 @@ public class HomeFragment extends Fragment {
         );
         params.setMargins(0, 0, 0, 16);
 
-        Button delete = new Button(getContext());
-        Button share = new Button(getContext());
-        Button markCompleted = new Button(getContext());
+        Button delete= new Button(getContext());
+        Button share=new Button(getContext());
         Button setNotify=new Button(getContext());
+        Button markCompleted= new Button(getContext());
         GradientDrawable background = new GradientDrawable();
         background.setShape(GradientDrawable.RECTANGLE);
         background.setColor(Color.parseColor("#6200EE"));
@@ -163,13 +139,11 @@ public class HomeFragment extends Fragment {
         delete.setTextColor(Color.WHITE);
         delete.setBackground(background2);
         popupView.addView(delete);
-        setNotify.setText("Set Notify");
         popupView.addView(setNotify);
+        setNotify.setText("Set Notify");
 
-
-
-        tasks = dataBaseHelper.getAllTasks();
-        for (Task task : tasks) {
+            tasks = dataBaseHelper.getAllTasks();
+        for(Task task:tasks){
             newBtn = new Button(requireContext());
             newBtn.setText(task.toString());
             newBtn.setBackground(background3);
@@ -179,10 +153,10 @@ public class HomeFragment extends Fragment {
             buttonList.add(newBtn);
         }
 
-        for (int i = 0; i < buttonList.size(); i++) {
-            Button button = buttonList.get(i);
-            Task task = tasks.get(i);
-            taskText = new TextView(getContext());
+        for (int i=0;i<buttonList.size();i++){
+            Button button=buttonList.get(i);
+            Task task =tasks.get(i);
+            taskText=new TextView(getContext());
             taskText.setTextColor(Color.WHITE);
             taskText.setTextSize(20);
             popupView.addView(taskText);
@@ -211,6 +185,116 @@ public class HomeFragment extends Fragment {
 
             });
         }
+        filteredTasks = new ArrayList<>();
+
+        SearchView search_bar=binding.search;
+        for (Task task : tasks) {
+            filteredTasks.add(task.toString()); // Assuming `toString()` returns the task title
+        }
+        search_bar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                layout.removeAllViews(); // Clear all existing views in the layout
+
+                boolean found = false;
+                for (Task task : tasks) {
+                    if (task.toString().toLowerCase().contains(query.toLowerCase())) {
+                        Button taskButton = new Button(requireContext());
+                        taskButton.setText(task.toString());
+                        taskButton.setBackground(background3);
+                        taskButton.setTextColor(Color.WHITE);
+                        taskButton.setLayoutParams(params);
+                        layout.addView(taskButton);
+                        filteredButtonList.add(taskButton);
+                    }}
+                for (int i=0;i<filteredButtonList.size();i++){
+                    Button button=filteredButtonList.get(i);
+                    taskText=new TextView(getContext());
+                    taskText.setTextColor(Color.WHITE);
+                    taskText.setTextSize(20);
+                    popupView.addView(taskText);
+                    Task task = tasks.get(i);
+                    button.setOnClickListener(view -> {
+                        taskText.setText("");
+                        taskText.setText(task.toString());
+
+                        popupWindow.showAtLocation(layout, Gravity.CENTER, 0, 0);
+                        delete.setOnClickListener(v5 -> {
+                            dataBaseHelper.deleteTaskById(task.getId());
+                            layout.removeView(button);
+                            popupWindow.dismiss();
+                        });
+                        markCompleted.setOnClickListener(view1 -> {
+                            task.setCompletionStatus(CompletionStatus.COMPLETED);
+                            taskText.setText("");
+                            taskText.setText(task.toString());
+                            dataBaseHelper.updateStatus(task);
+                            button.setText(task.toString());
+                        });
+                        share.setOnClickListener(view1 -> {
+                            shareTaskViaEmail(task);
+                        });
+
+                    });
+                }
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                layout.removeAllViews();
+                filteredButtonList.clear();
+                for (Task task : tasks) {
+                    if (task.toString().toLowerCase().contains(newText.toLowerCase())) {
+                        Button taskButton = new Button(requireContext());
+                        taskButton.setText(task.toString());
+                        taskButton.setBackground(background3);
+                        taskButton.setLayoutParams(params);
+                        taskButton.setTextColor(Color.WHITE);
+                        filteredButtonList.add(taskButton);
+                        layout.addView(taskButton);
+
+                    }
+                }
+
+                for (int i=0;i<filteredButtonList.size();i++){
+                    Button button=filteredButtonList.get(i);
+                    taskText=new TextView(getContext());
+                    taskText.setTextColor(Color.WHITE);
+                    taskText.setTextSize(20);
+                    popupView.addView(taskText);
+                    Task task = tasks.get(i);
+                    button.setOnClickListener(view -> {
+                        taskText.setText("");
+                        taskText.setText(task.toString());
+
+                        popupWindow.showAtLocation(layout, Gravity.CENTER, 0, 0);
+                        delete.setOnClickListener(v5 -> {
+                            dataBaseHelper.deleteTaskById(task.getId());
+                            layout.removeView(button);
+                            popupWindow.dismiss();
+                        });
+                        markCompleted.setOnClickListener(view1 -> {
+                            task.setCompletionStatus(CompletionStatus.COMPLETED);
+                            taskText.setText("");
+                            taskText.setText(task.toString());
+                            dataBaseHelper.updateStatus(task);
+                            button.setText(task.toString());
+                        });
+                        share.setOnClickListener(view1 -> {
+                            shareTaskViaEmail(task);
+                        });
+
+                    });
+                }
+
+
+
+                return false;
+            }
+        });
+
         return root;
 
 
@@ -221,7 +305,6 @@ public class HomeFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
     private void shareTaskViaEmail(Task task) {
         String subject = "Task: " + task.getTittle();
         String body = "Here are the details of the task:\n\n" +
@@ -236,6 +319,8 @@ public class HomeFragment extends Fragment {
         startActivity(Intent.createChooser(emailIntent, "Send task via email..."));
 
     }
+
+
 
 
 }

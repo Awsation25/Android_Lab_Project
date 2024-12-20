@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.example.awsshaheen_ghassanqandeel_encs5150_project.CompletionStatus;
@@ -31,6 +32,7 @@ public class CompletedTasksFragment extends Fragment {
     private List<Task> tasks;
     TextView taskText;
     Button newBtn;
+    private List<String> filteredTasks;
     private FragmentCompletedTasksBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -46,6 +48,7 @@ public class CompletedTasksFragment extends Fragment {
         // Display tasks in the TextView
         LinearLayout layout=binding.vLayout ;
         LinearLayout popupView = new LinearLayout(getContext());
+        List<Button> filteredButtonList = new ArrayList<>();
         List<Button> buttonList = new ArrayList<>();
         popupView.setBackgroundColor(Color.GRAY);
         PopupWindow popupWindow = new PopupWindow(
@@ -140,6 +143,116 @@ public class CompletedTasksFragment extends Fragment {
 
             });
         }
+        filteredTasks = new ArrayList<>();
+
+        SearchView search_bar=binding.search;
+        for (Task task : tasks) {
+            filteredTasks.add(task.toString()); // Assuming `toString()` returns the task title
+        }
+        search_bar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                layout.removeAllViews(); // Clear all existing views in the layout
+
+                boolean found = false;
+                for (Task task : tasks) {
+                    if (task.toString().toLowerCase().contains(query.toLowerCase())) {
+                        Button taskButton = new Button(requireContext());
+                        taskButton.setText(task.toString());
+                        taskButton.setBackground(background3);
+                        taskButton.setTextColor(Color.WHITE);
+                        taskButton.setLayoutParams(params);
+                        layout.addView(taskButton);
+                        filteredButtonList.add(taskButton);
+                    }}
+                for (int i=0;i<filteredButtonList.size();i++){
+                    Button button=filteredButtonList.get(i);
+                    taskText=new TextView(getContext());
+                    taskText.setTextColor(Color.WHITE);
+                    taskText.setTextSize(20);
+                    popupView.addView(taskText);
+                    Task task = tasks.get(i);
+                    button.setOnClickListener(view -> {
+                        taskText.setText("");
+                        taskText.setText(task.toString());
+
+                        popupWindow.showAtLocation(layout, Gravity.CENTER, 0, 0);
+                        delete.setOnClickListener(v5 -> {
+                            dataBaseHelper.deleteTaskById(task.getId());
+                            layout.removeView(button);
+                            popupWindow.dismiss();
+                        });
+                        markCompleted.setOnClickListener(view1 -> {
+                            task.setCompletionStatus(CompletionStatus.COMPLETED);
+                            taskText.setText("");
+                            taskText.setText(task.toString());
+                            dataBaseHelper.updateStatus(task);
+                            button.setText(task.toString());
+                        });
+                        share.setOnClickListener(view1 -> {
+                            shareTaskViaEmail(task);
+                        });
+
+                    });
+                }
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                layout.removeAllViews();
+                filteredButtonList.clear();
+                for (Task task : tasks) {
+                    if (task.toString().toLowerCase().contains(newText.toLowerCase())) {
+                        Button taskButton = new Button(requireContext());
+                        taskButton.setText(task.toString());
+                        taskButton.setBackground(background3);
+                        taskButton.setLayoutParams(params);
+                        taskButton.setTextColor(Color.WHITE);
+                        filteredButtonList.add(taskButton);
+                        layout.addView(taskButton);
+
+                    }
+                }
+
+                for (int i=0;i<filteredButtonList.size();i++){
+                    Button button=filteredButtonList.get(i);
+                    taskText=new TextView(getContext());
+                    taskText.setTextColor(Color.WHITE);
+                    taskText.setTextSize(20);
+                    popupView.addView(taskText);
+                    Task task = tasks.get(i);
+                    button.setOnClickListener(view -> {
+                        taskText.setText("");
+                        taskText.setText(task.toString());
+
+                        popupWindow.showAtLocation(layout, Gravity.CENTER, 0, 0);
+                        delete.setOnClickListener(v5 -> {
+                            dataBaseHelper.deleteTaskById(task.getId());
+                            layout.removeView(button);
+                            popupWindow.dismiss();
+                        });
+                        markCompleted.setOnClickListener(view1 -> {
+                            task.setCompletionStatus(CompletionStatus.COMPLETED);
+                            taskText.setText("");
+                            taskText.setText(task.toString());
+                            dataBaseHelper.updateStatus(task);
+                            button.setText(task.toString());
+                        });
+                        share.setOnClickListener(view1 -> {
+                            shareTaskViaEmail(task);
+                        });
+
+                    });
+                }
+
+
+
+                return false;
+            }
+        });
+
         return root;
 
 

@@ -26,7 +26,7 @@ public class Home2Activity extends AppCompatActivity {
     private EmailSharedPrefManager sharedEmail = EmailSharedPrefManager.getInstance(this);
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityHome2Binding binding;
-
+    Boolean isDark=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +41,9 @@ public class Home2Activity extends AppCompatActivity {
         binding.appBarMain2.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                isDark=!isDark;
+                darkMode(isDark);
+
 
             }
         });
@@ -101,5 +104,11 @@ public class Home2Activity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main2);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+    public void darkMode(boolean dark){
+        if(dark)
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        else
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
     }
 }
