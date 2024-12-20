@@ -1,28 +1,27 @@
 package com.example.awsshaheen_ghassanqandeel_encs5150_project.ui.home;
 
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.renderscript.Allocation;
-import android.renderscript.Element;
-import android.renderscript.RenderScript;
-import android.renderscript.ScriptIntrinsicBlur;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.awsshaheen_ghassanqandeel_encs5150_project.CompletionStatus;
 import com.example.awsshaheen_ghassanqandeel_encs5150_project.DataBaseHelper;
+import com.example.awsshaheen_ghassanqandeel_encs5150_project.PriorityLevel;
 import com.example.awsshaheen_ghassanqandeel_encs5150_project.Task;
 import com.example.awsshaheen_ghassanqandeel_encs5150_project.databinding.FragmentHomeBinding;
 
@@ -34,6 +33,7 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private List<Task> tasks;
     TextView taskText;
+    String selectedStatus;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -52,7 +52,7 @@ public class HomeFragment extends Fragment {
         PopupWindow popupWindow = new PopupWindow(
                 popupView,
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                700,
+                900,
                 true // Focusable to handle outside touches
         );
         popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -61,6 +61,19 @@ public class HomeFragment extends Fragment {
 
 
         Button delete= new Button(getContext());
+        Button share=new Button(getContext());
+        Button markCompleted= new Button(getContext());
+
+
+        popupView.setOrientation(LinearLayout.VERTICAL);
+        markCompleted.setText("Mark As Completed");
+        markCompleted.setTextColor(Color.WHITE);
+        markCompleted.setBackgroundColor(Color.GREEN);
+        popupView.addView(markCompleted);
+        share.setText("Share via Email");
+        share.setTextColor(Color.WHITE);
+        share.setBackgroundColor(Color.BLUE);
+        popupView.addView(share);
         delete.setText("Delete Task");
         delete.setTextColor(Color.WHITE);
         delete.setBackgroundColor(Color.RED);
@@ -70,6 +83,8 @@ public class HomeFragment extends Fragment {
         for(Task task:tasks){
             newBtn = new Button(requireContext());
             newBtn.setText(task.toString());
+            newBtn.setBackgroundColor(Color.BLUE);
+            newBtn.setTextColor(Color.WHITE);
             layout.addView(newBtn);
             buttonList.add(newBtn);
         }
@@ -78,16 +93,21 @@ public class HomeFragment extends Fragment {
             Button button=buttonList.get(i);
             Task task =tasks.get(i);
             taskText=new TextView(getContext());
-
+            taskText.setTextColor(Color.WHITE);
+            taskText.setTextSize(20);
             popupView.addView(taskText);
 
             button.setOnClickListener(view -> {
+                taskText.setText("");
                 taskText.setText(task.toString());
 
                 popupWindow.showAtLocation(layout, Gravity.CENTER, 0, 0);
                 delete.setOnClickListener(v -> {
-                        dataBaseHelper.deleteTaskById(task.getId());
+                    dataBaseHelper.deleteTaskById(task.getId());
+                    layout.removeView(button);
+                    popupWindow.dismiss();
                 });
+
             });
         }
             return root;

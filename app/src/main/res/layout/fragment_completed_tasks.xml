@@ -5,10 +5,14 @@
     android:layout_height="match_parent"
     tools:context=".ui.completedtasks.CompletedTasks">
 
-    <TextView
-        android:id="@+id/tttttt"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hello" />
+        android:layout_height="match_parent">
 
+        <LinearLayout
+            android:id="@+id/vLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
 </FrameLayout>
