@@ -54,6 +54,7 @@ public class CompletedTasksFragment extends Fragment {
                 900,
                 true // Focusable to handle outside touches
         );
+
         popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         popupWindow.setOutsideTouchable(true);
         popupWindow.setFocusable(true);

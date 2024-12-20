@@ -30,7 +30,7 @@ public class TaskJSONParser {
                 jsonObject = (JSONObject) jsonArray.get(i);
                 Task task = new Task();
 
-                task.setId(jsonObject.getInt("id"));
+
                 task.setEmail(userEmail);
                 task.setTittle(jsonObject.getString("title"));
                 task.setDescription(jsonObject.getString("description"));

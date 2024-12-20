@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                         toHomeActivity.putExtra("Email",userEmail);
-                         MainActivity.this.startActivity(toHomeActivity);
+                        MainActivity.this.startActivity(toHomeActivity);
                     } else
                         Toast.makeText(MainActivity.this, "Password Uncorrected ", Toast.LENGTH_LONG).show();
                 } else
