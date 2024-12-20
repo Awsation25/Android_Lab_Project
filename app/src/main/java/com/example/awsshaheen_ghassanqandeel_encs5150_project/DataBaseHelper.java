@@ -175,8 +175,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 String title = cursor.getString(1);
                 String description = cursor.getString(2);
                 String dueDate = cursor.getString(3);
-                taskList.append("Task").append(id)
-                        .append("\n")
+                taskList
                         .append("Title: ").append(title)
                         .append("\n")
                         .append(", Description: ").append(description)
@@ -255,11 +254,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                int id = cursor.getInt(0);
-                String email = cursor.getString(1);
-                String title = cursor.getString(2);
-                String description = cursor.getString(3);
-                String dueDate = cursor.getString(4);
+                int id = cursor.getInt(2);
+                String email = cursor.getString(0);
+                String title = cursor.getString(3);
+                String description = cursor.getString(4);
+                String dueDate = cursor.getString(1);
                 CompletionStatus completionStatus = CompletionStatus.valueOf(cursor.getString(5));
                 PriorityLevel priorityLevel = PriorityLevel.valueOf(cursor.getString(6));
                 boolean reminder = cursor.getInt(7) == 1;
@@ -325,6 +324,21 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
         return tasks;
     }
+    public void updateStatus(Task task) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("COMPLETION_STATE", CompletionStatus.COMPLETED.toString()); // Set status to 'COMPLETED'
+        int id = task.getId();
+        int rowsUpdated = db.update("Tasks", values, "id = ?", new String[]{String.valueOf(id)});
+        if (rowsUpdated > 0) {
+            System.out.println("Task updated successfully.");
+        } else {
+            System.out.println("No task found with the given ID.");
+        }
+
+        db.close();
+    }
+
 
 
 
