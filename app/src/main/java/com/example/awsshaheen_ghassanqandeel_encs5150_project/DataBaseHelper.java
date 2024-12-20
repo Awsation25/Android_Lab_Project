@@ -138,21 +138,23 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         List<Task> tasks = new ArrayList<>();
 
         Cursor cursor = db.rawQuery(
-                "SELECT EMAIL, TITTLE, DESCRIPTION, DUEDATE, COMPLETION_STATE, PRIORITY_LEVEL, Reminder " +
-                        "FROM TASKS WHERE EMAIL LIKE ?",
+                "SELECT ID, EMAIL, TITTLE, DESCRIPTION, DUEDATE, COMPLETION_STATE, PRIORITY_LEVEL, Reminder " +
+                        "FROM TASKS WHERE EMAIL = ?",
                 new String[]{userEmail}
-
         );
+
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 int id = cursor.getInt(0);
-                String title = cursor.getString(1);
-                String description = cursor.getString(2);
-                String dueDate = cursor.getString(3);
-                CompletionStatus completionState = CompletionStatus.valueOf(cursor.getString(4));
-                PriorityLevel priorityLevel = PriorityLevel.valueOf(cursor.getString(5));
-                boolean reminder = cursor.getInt(6) == 1;
-                Task task = new Task(id, " ", title, description, dueDate, priorityLevel, completionState, reminder);
+                String email = cursor.getString(1);
+                String title = cursor.getString(2);
+                String description = cursor.getString(3);
+                String dueDate = cursor.getString(4);
+                CompletionStatus completionStatus = CompletionStatus.valueOf(cursor.getString(5));
+                PriorityLevel priorityLevel = PriorityLevel.valueOf(cursor.getString(6));
+                boolean reminder = cursor.getInt(7) == 1;
+
+                Task task = new Task(id, title, email, description, dueDate, priorityLevel, completionStatus, reminder);
                 tasks.add(task);
             }
             cursor.close();
@@ -192,26 +194,111 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return taskList.toString();
     }
 
-    public boolean deleteTaskById(int id) {
-        boolean isDeleted = false;
+    public void deleteTaskById(int id) {
 
         // Get writable database
         SQLiteDatabase db = getWritableDatabase();
+        int rowsDeleted = db.delete(
+                "TASKS",
+                "ID = ?",
+                new String[]{String.valueOf(id)}
+        );
 
-        try {
-            // Execute the delete query
-            int rowsDeleted = db.delete("TASKS", "ID = ?", new String[]{String.valueOf(id)});
+        if (rowsDeleted > 0) {
+            Log.d("Database", "Row deleted successfully.");
+        } else {
+            Log.d("Database", "No row found with the specified ID.");
+        }
+    }
 
-            // Check if any rows were deleted
-            if (rowsDeleted > 0) {
-                isDeleted = true;
+    public List<Task> findCompletedTasks() {
+        SQLiteDatabase db = getReadableDatabase();
+        List<Task> tasks = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT EMAIL, DATE(DUEDATE) AS DueDate, " +
+                        "ID, TITTLE, DESCRIPTION, COMPLETION_STATE, PRIORITY_LEVEL, Reminder " +
+                        "FROM TASKS WHERE COMPLETION_STATE = ? AND EMAIL = ? " +
+                        "ORDER BY DATE(DUEDATE) ASC, TIME(DUEDATE) ASC",
+                new String[]{CompletionStatus.COMPLETED.toString(), userEmail}
+        );
+
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                int id = cursor.getInt(0);
+                String email = cursor.getString(1);
+                String title = cursor.getString(2);
+                String description = cursor.getString(3);
+                String dueDate = cursor.getString(4);
+                CompletionStatus completionStatus = CompletionStatus.valueOf(cursor.getString(5));
+                PriorityLevel priorityLevel = PriorityLevel.valueOf(cursor.getString(6));
+                boolean reminder = cursor.getInt(7) == 1;
+
+                Task task = new Task(id, title, email, description, dueDate, priorityLevel, completionStatus, reminder);
+                tasks.add(task);
             }
-        } catch (Exception e) {
-            Log.e("DatabaseError", "Error while deleting task: " + e.getMessage());
+            cursor.close();
+        }
+        return tasks;
+    }
+
+    public List<Task> findByDateTasks(String startDate, String endDate) {
+        SQLiteDatabase db = getReadableDatabase();
+        List<Task> tasks = new ArrayList<>();
+        //        Aws, the input data should be like this
+        //         "2023-12-01";
+        //        "2023-12-31";
+        Cursor cursor = db.rawQuery(
+                "SELECT EMAIL, DATE(DUEDATE) AS DueDate, " +
+                        "ID, TITTLE, DESCRIPTION, COMPLETION_STATE, PRIORITY_LEVEL, Reminder " +
+                        "FROM TASKS WHERE EMAIL = ? AND DATE(DUEDATE) BETWEEN ? AND ? " +
+                        "ORDER BY DATE(DUEDATE) ASC, TIME(DUEDATE) ASC",
+                new String[]{userEmail, startDate, endDate}
+        );
+
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                int id = cursor.getInt(0);
+                String email = cursor.getString(1);
+                String title = cursor.getString(2);
+                String description = cursor.getString(3);
+                String dueDate = cursor.getString(4);
+                CompletionStatus completionStatus = CompletionStatus.valueOf(cursor.getString(5));
+                PriorityLevel priorityLevel = PriorityLevel.valueOf(cursor.getString(6));
+                boolean reminder = cursor.getInt(7) == 1;
+
+                Task task = new Task(id, title, email, description, dueDate, priorityLevel, completionStatus, reminder);
+                tasks.add(task);
+            }
+            cursor.close();
+        }
+        return tasks;
+
+    }
+    public void editEmailAndPassword(String oldEmail,String newEmail,String password){
+
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        if(oldEmail!=null&&password!=null){
+            values.put("EMAIL", newEmail);
+            sharedEmail.writeString("Email",newEmail);
+            values.put("PASSWORD", password);
+
+        }
+        if(oldEmail!=null&&password==null){
+            values.put("EMAIL", newEmail);
+            sharedEmail.writeString("Email",newEmail);
+
+        }
+        if(password!=null&&oldEmail==null){
+            values.put("PASSWORD", password);
         }
 
-        return isDeleted; // Returns true if the task was deleted, false otherwise
+        if (values.size() > 0) {
+            db.update("TASKS", values, "EMAIL = ?", new String[]{oldEmail});
+        }
     }
+
 
 
 }

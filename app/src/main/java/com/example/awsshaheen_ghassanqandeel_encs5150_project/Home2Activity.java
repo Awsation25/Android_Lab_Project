@@ -21,7 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.awsshaheen_ghassanqandeel_encs5150_project.databinding.ActivityHome2Binding;
 
 public class Home2Activity extends AppCompatActivity {
-
+    private EmailSharedPrefManager sharedEmail = EmailSharedPrefManager.getInstance(this);
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityHome2Binding binding;
 
@@ -62,6 +62,8 @@ public class Home2Activity extends AppCompatActivity {
                 // Log out: Navigate back to MainActivity (Login Page)
                 Intent backToLogin = new Intent(Home2Activity.this, MainActivity.class);
                 backToLogin.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                sharedEmail.writeString("Email",null);
+
                 startActivity(backToLogin);
                 finish(); // Close Home2Activity
             } else {
