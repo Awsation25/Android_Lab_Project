@@ -83,10 +83,10 @@ public class MainActivity extends AppCompatActivity {
 
 
                 //the email exist in database
-                if (!userEmail.isEmpty()) {
+                if (userEmail!=null) {
                     //the password is correct
 
-                    if (!passwordFromDataBase.isEmpty()) {
+                    if (passwordFromDataBase!=null) {
                         //store in shared pref
                         if (rememberMe.isChecked())
                             sharedPrefManager.writeString("Email", userEmail);

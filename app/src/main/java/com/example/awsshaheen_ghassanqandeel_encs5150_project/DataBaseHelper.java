@@ -275,25 +275,44 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
+        ContentValues valuesTask=new ContentValues();
         if(oldEmail!=null&&password!=null){
             values.put("EMAIL", newEmail);
             sharedEmail.writeString("Email",newEmail);
             values.put("PASSWORD", password);
+            valuesTask.put("EMAIL", newEmail);
+            int nRows = db.update(
+                    "TASKS",
+                    valuesTask,
+                    "EMAIL = ?",
+                    new String[]{oldEmail}
+            );
 
         }
-        if(oldEmail!=null&&password==null){
+        else if(oldEmail!=null&&password==null){
             values.put("EMAIL", newEmail);
             sharedEmail.writeString("Email",newEmail);
+            valuesTask.put("EMAIL", newEmail);
+            int nRows =db.update(
+                    "TASKS",
+                    valuesTask,
+                    "EMAIL = ?",
+                    new String[]{oldEmail}
+            );
 
         }
-        if(password!=null&&oldEmail==null){
+
+        else if(password!=null&&oldEmail==null){
             values.put("PASSWORD", password);
         }
 
+
         if (values.size() > 0) {
-            db.update("TASKS", values, "EMAIL = ?", new String[]{oldEmail});
+            db.update("USERS", values, "EMAIL = ?", new String[]{oldEmail});
+
         }
     }
+
 
     public List<Task> findTaskByKeyWord(String keyWord){
         SQLiteDatabase db = getReadableDatabase();

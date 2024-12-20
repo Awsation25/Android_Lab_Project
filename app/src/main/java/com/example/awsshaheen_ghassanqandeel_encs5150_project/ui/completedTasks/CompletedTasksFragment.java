@@ -37,8 +37,10 @@ public class CompletedTasksFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
        CompletedTasksViewModel completedTasksViewModel =
                new ViewModelProvider(this).get(CompletedTasksViewModel.class);
+
         binding= FragmentCompletedTasksBinding.inflate(inflater, container, false);
         View root =binding.getRoot();
+
         DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(getContext());
 
         // Display tasks in the TextView

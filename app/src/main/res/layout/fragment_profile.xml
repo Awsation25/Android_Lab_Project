@@ -1,13 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.profile.ProfileFragment">
+    android:orientation="vertical"
+    tools:context=".ui.profile.ProfileFragment" >
 
     <TextView
+        android:id="@+id/textView2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hello" />
+        android:layout_height="51dp"
+        android:background="#4CAF50"
+        android:text="Profile"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        android:textStyle="bold" />
 
-</FrameLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Old Email"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:boxStrokeColor="#6200EE">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/oldEmailEditText"
+            android:layout_width="match_parent"
+            android:layout_height="70dp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Write Your New Email"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:boxStrokeColor="#6200EE">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/newEmailEditText"
+            android:layout_width="match_parent"
+            android:layout_height="70dp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Write Your new  Password"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:boxStrokeColor="#6200EE">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/newPasswordEditText"
+            android:layout_width="match_parent"
+            android:layout_height="70dp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/editButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Edit My info"
+        app:strokeColor="#4CAF50" />
+
+
+</LinearLayout>
