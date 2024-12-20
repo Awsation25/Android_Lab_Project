@@ -22,4 +22,19 @@
         android:name="com.example.awsshaheen_ghassanqandeel_encs5150_project.ui.displayAll.DisplayAllFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_slideshow" />
+    <fragment
+        android:id="@+id/nav_completedTasks"
+        android:name="com.example.awsshaheen_ghassanqandeel_encs5150_project.ui.completedTasks.CompletedTasksFragment"
+        android:label="Completed Tasks"
+        tools:layout="@layout/fragment_completed_tasks" />
+    <fragment
+        android:id="@+id/nav_search"
+        android:name="com.example.awsshaheen_ghassanqandeel_encs5150_project.ui.search.SearchFragment"
+        android:label="Search"
+        tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.example.awsshaheen_ghassanqandeel_encs5150_project.ui.profile.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>

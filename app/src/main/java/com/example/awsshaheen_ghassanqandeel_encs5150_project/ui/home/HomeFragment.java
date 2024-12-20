@@ -42,7 +42,6 @@ public class HomeFragment extends Fragment {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
         DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(getContext());
 
         // Display tasks in the TextView
@@ -91,8 +90,6 @@ public class HomeFragment extends Fragment {
                 });
             });
         }
-
-
             return root;
 
 
